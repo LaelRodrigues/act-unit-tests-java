@@ -5,14 +5,14 @@ import br.ufrn.imd.models.BankAccountTestFixture;
 import br.ufrn.imd.repositories.Repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Null;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
 
 public class BankServiceTests {
 
@@ -29,6 +29,8 @@ public class BankServiceTests {
 
         when(repository.get(any(String.class))).thenReturn(fixture.getNewBankAccount());
         when(complianceApi.CanItReceiveNewDeposit(any(BankAccount.class), any(double.class))).thenReturn(true);
+        when(complianceApi.CanItReceiveNewWithdraw(any(BankAccount.class), any(double.class))).thenReturn(true);
+
 
         bankService = new BankService(repository, complianceApi);
     }
@@ -52,8 +54,22 @@ public class BankServiceTests {
         verify(repository).update(any(BankAccount.class));
     }
 
+//    @Test
+//    public void testWithdraw() {
+//        var account = repository.get(UUID.randomUUID().toString());
+//        bankService.deposit(account, 1000);
+//        var result = bankService.withdraw(account, 500);
+//
+//        // Assets
+//        assertTrue(result.getBankAccount().isPresent());
+//        assertEquals(500, result.getBankAccount().get().getBalance());
+//
+//        // Verify
+//        //verify(repository).update(any(BankAccount.class));
+//    }
+
     @Test
-    public void testDepositException(){
+    public void testDepositException() {
         var account = repository.get(UUID.randomUUID().toString());
         when(repository.update(account)).thenThrow();
         var result = bankService.deposit(account, 1000);
