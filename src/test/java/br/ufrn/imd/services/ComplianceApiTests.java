@@ -83,10 +83,10 @@ public class ComplianceApiTests {
         var account = new BankAccount("79d8c19c-316e-496c-b280-9aed815f6cb2", 123456, 123, 0);
         account.deposit(1000);
 
-        var result = bankService.deposit(account, 100);
+        var result = bankService.withdraw(account, 100);
         assertTrue(result.getBankAccount().isEmpty());
         assertEquals(500, result.getStatusCode());
-        assertEquals("THIS ACCOUNT CAN'T WITHDRAW  : CONNECTION FAILED!", result.getMessages()[0]);
+        assertEquals("THIS ACCOUNT CAN'T WITHDRAW: CONNECTION FAILED!", result.getMessages()[0]);
     }
 
 }
